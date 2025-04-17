@@ -1,0 +1,10 @@
+LICENSE
+README.md
+setup.py
+deepvisual/__init__.py
+deepvisual/module.py
+deepvisual.egg-info/PKG-INFO
+deepvisual.egg-info/SOURCES.txt
+deepvisual.egg-info/dependency_links.txt
+deepvisual.egg-info/requires.txt
+deepvisual.egg-info/top_level.txt
