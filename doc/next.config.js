@@ -1,0 +1,16 @@
+const nextra = require('nextra')
+
+const withNextra = nextra({
+  theme: 'nextra-theme-docs',
+  themeConfig: './theme.config.jsx',
+  defaultShowCopyCode: true,
+  mdxOptions: {
+    remarkPlugins: [],
+    rehypePlugins: []
+  }
+})
+
+module.exports = withNextra({
+  reactStrictMode: true,
+  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+}) 

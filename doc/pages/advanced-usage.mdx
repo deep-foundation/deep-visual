@@ -1,0 +1,200 @@
+# Advanced Usage
+
+## Custom Node Layouts
+
+You can create custom node layouts by modifying the position dictionary:
+
+```python
+import deepvisual as dv
+import pandas as pd
+import numpy as np
+
+# Sample data
+df = pd.DataFrame({
+    'from': ['A', 'B', 'C', 'D'],
+    'to': ['B', 'C', 'D', 'A']
+})
+
+# Custom positions
+custom_positions = {
+    'A': (0, 0),
+    'B': (1, 1),
+    'C': (2, 0),
+    'D': (1, -1)
+}
+
+# Create visualization with custom layout
+fig, ax = plt.subplots(figsize=(10, 8))
+dv.visualize_duplet_link(
+    df,
+    node_positions=custom_positions,
+    edge_color="blue",
+    node_text_color="black"
+)
+```
+
+## Combining Multiple Visualizations
+
+Create complex visualizations by combining multiple plots:
+
+```python
+import deepvisual as dv
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Create subplots
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+
+# First visualization
+df1 = pd.DataFrame({
+    'from': ['A', 'B', 'C'],
+    'to': ['B', 'C', 'A']
+})
+dv.link_doublet(df1, ax=ax1, title='First Graph')
+
+# Second visualization
+df2 = pd.DataFrame({
+    'from': ['X', 'Y', 'Z'],
+    'to': ['Y', 'Z', 'X']
+})
+dv.link_doublet(df2, ax=ax2, title='Second Graph')
+
+plt.tight_layout()
+plt.show()
+```
+
+## Custom Edge Styles
+
+Create custom edge styles using matplotlib's ArrowStyle:
+
+```python
+import deepvisual as dv
+import pandas as pd
+from matplotlib.patches import ArrowStyle
+
+# Sample data
+df = pd.DataFrame({
+    'from': ['Start', 'Process', 'End'],
+    'to': ['Process', 'End', 'Start']
+})
+
+# Custom arrow style
+custom_style = ArrowStyle.CurveFilledB(head_length=0.8, head_width=0.6)
+
+# Create visualization with custom arrow style
+dv.visualize_duplet_link(
+    df,
+    arrow_style=custom_style,
+    edge_color="red",
+    node_text_color="black"
+)
+```
+
+## Interactive Features
+
+Add interactive features to your visualizations:
+
+```python
+import deepvisual as dv
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Button
+
+# Sample data
+df = pd.DataFrame({
+    'from': ['A', 'B', 'C'],
+    'to': ['B', 'C', 'A']
+})
+
+# Create figure with button
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111)
+button_ax = fig.add_axes([0.7, 0.05, 0.2, 0.075])
+button = Button(button_ax, 'Change Colors')
+
+# Initial visualization
+viz = dv.link_doublet(df, ax=ax)
+
+# Button click handler
+def change_colors(event):
+    viz.set_edge_color('green')
+    viz.set_node_color('purple')
+    fig.canvas.draw()
+
+button.on_clicked(change_colors)
+plt.show()
+```
+
+## Performance Optimization
+
+For large graphs, optimize performance:
+
+```python
+import deepvisual as dv
+import pandas as pd
+import numpy as np
+
+# Generate large dataset
+n_nodes = 100
+nodes = [f'Node_{i}' for i in range(n_nodes)]
+df = pd.DataFrame({
+    'from': np.random.choice(nodes, 1000),
+    'to': np.random.choice(nodes, 1000)
+})
+
+# Optimize visualization
+dv.visualize_duplet_link(
+    df,
+    node_text_visible=False,  # Hide node labels for better performance
+    edge_color="gray",
+    background_color="white",
+    figsize=(15, 15)
+)
+```
+
+## Custom Color Maps
+
+Create custom color maps for your visualizations:
+
+```python
+import deepvisual as dv
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
+
+# Create custom colormap
+colors = ['red', 'yellow', 'green']
+cmap = LinearSegmentedColormap.from_list('custom', colors)
+
+# Sample data
+df = pd.DataFrame({
+    'from': ['A', 'B', 'C', 'D'],
+    'to': ['B', 'C', 'D', 'A'],
+    'weight': [0.2, 0.5, 0.8, 1.0]  # Edge weights
+})
+
+# Create visualization with custom colormap
+dv.visualize_duplet_link(
+    df,
+    edge_color=cmap(df['weight']),
+    node_text_color="black",
+    background_color="white"
+)
+```
+
+## Best Practices for Advanced Usage
+
+1. **Performance**:
+   - Use appropriate data structures
+   - Optimize for large datasets
+   - Consider memory usage
+
+2. **Customization**:
+   - Use consistent styling
+   - Document custom features
+   - Test thoroughly
+
+3. **Interactivity**:
+   - Add meaningful interactions
+   - Consider user experience
+   - Provide clear feedback 

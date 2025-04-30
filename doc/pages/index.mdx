@@ -1,0 +1,44 @@
+# DeepVisual Documentation
+
+DeepVisual is a Python library for creating advanced graph visualizations. It provides intuitive and flexible tools for visualizing various types of graphs, including triplet graphs, duplet links, and doublet connections.
+
+## Features
+
+- **Triplet Graph Visualization**: Create beautiful visualizations of triplet relationships
+- **Duplet Link Visualization**: Visualize connections between pairs of nodes
+- **Doublet Link Visualization**: Create sophisticated doublet link diagrams
+- **Customizable Styling**: Extensive options for colors, sizes, and layouts
+- **Interactive Plots**: Generate interactive matplotlib visualizations
+
+## Quick Start
+
+```python
+import deepvisual as dv
+import pandas as pd
+
+# Create a sample dataframe
+df = pd.DataFrame({
+    'from': ['A', 'B', 'C'],
+    'to': ['B', 'C', 'A']
+})
+
+# Visualize the connections
+dv.link_doublet(df)
+```
+
+## Installation
+
+```bash
+pip install deepvisual
+```
+
+## Documentation Sections
+
+- [Getting Started](/getting-started)
+- [API Reference](/api-reference)
+- [Examples](/examples)
+- [Advanced Usage](/advanced-usage)
+
+## License
+
+MIT License 

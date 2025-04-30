@@ -1,0 +1,100 @@
+# API Reference
+
+## visualize_triplet_graph
+
+```python
+visualize_triplet_graph(
+    df,
+    edge_color="gray",
+    node_color="lightblue", 
+    node_text_color="black", 
+    background_color="white", 
+    figsize=(10, 8)
+)
+```
+
+Visualizes a triplet graph where each row in the dataframe represents a triplet relationship.
+
+### Parameters
+
+- `df`: DataFrame containing triplet relationships
+- `edge_color`: Color of the edges (default: "gray")
+- `node_color`: Color of the nodes (default: "lightblue")
+- `node_text_color`: Color of the node text (default: "black")
+- `background_color`: Background color of the plot (default: "white")
+- `figsize`: Figure size as (width, height) tuple (default: (10, 8))
+
+### Example
+
+```python
+import deepvisual as dv
+import pandas as pd
+
+df = pd.DataFrame({
+    'source': ['A', 'B', 'C'],
+    'relation': ['relates to', 'connects', 'links'],
+    'target': ['B', 'C', 'A']
+})
+
+dv.visualize_triplet_graph(df)
+```
+
+## visualize_duplet_link
+
+```python
+visualize_duplet_link(
+    df,
+    edge_color="gray",
+    node_text_color="black", 
+    background_color="white",
+    figsize=(10, 8),
+    curvature=0.3,
+    seed=42,
+    loop_radius=0.8,
+    arrow_style="->,head_length=0.7,head_width=0.5",
+    connection_style="arc3",
+    node_text_visible=True
+)
+```
+
+Visualizes duplet links between nodes.
+
+### Parameters
+
+- `df`: DataFrame containing duplet relationships
+- `edge_color`: Color of the edges (default: "gray")
+- `node_text_color`: Color of the node text (default: "black")
+- `background_color`: Background color of the plot (default: "white")
+- `figsize`: Figure size as (width, height) tuple (default: (10, 8))
+- `curvature`: Curvature of the edges (default: 0.3)
+- `seed`: Random seed for reproducibility (default: 42)
+- `loop_radius`: Radius for self-loops (default: 0.8)
+- `arrow_style`: Style of the arrows (default: "->,head_length=0.7,head_width=0.5")
+- `connection_style`: Style of the connections (default: "arc3")
+- `node_text_visible`: Whether to show node labels (default: True)
+
+## link_doublet
+
+```python
+link_doublet(
+    df,
+    loop_color='red',
+    edge_color='black',
+    inter_edge_color='blue',
+    background_color='white',
+    title='',
+    color_title='black'
+)
+```
+
+Creates a doublet link visualization.
+
+### Parameters
+
+- `df`: DataFrame with 'from' and 'to' columns
+- `loop_color`: Color for self-loops (default: 'red')
+- `edge_color`: Color for regular edges (default: 'black')
+- `inter_edge_color`: Color for interconnecting edges (default: 'blue')
+- `background_color`: Background color of the plot (default: 'white')
+- `title`: Title of the plot (default: '')
+- `color_title`: Color of the title (default: 'black') 

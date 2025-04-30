@@ -1,0 +1,113 @@
+# Getting Started
+
+## Installation
+
+DeepVisual can be installed using pip:
+
+```bash
+pip install deepvisual
+```
+
+## Basic Usage
+
+### Triplet Graph Visualization
+
+A triplet graph shows relationships between three elements. Here's how to create one:
+
+```python
+import deepvisual as dv
+import pandas as pd
+
+# Create a sample dataframe with triplet relationships
+df = pd.DataFrame({
+    'source': ['A', 'B', 'C'],
+    'relation': ['relates to', 'connects', 'links'],
+    'target': ['B', 'C', 'A']
+})
+
+# Create the visualization
+dv.visualize_triplet_graph(
+    df,
+    edge_color="blue",
+    node_color="lightgreen",
+    node_text_color="black",
+    background_color="white"
+)
+```
+
+### Duplet Link Visualization
+
+Duplet links show connections between pairs of nodes:
+
+```python
+import deepvisual as dv
+import pandas as pd
+
+# Create a sample dataframe with duplet relationships
+df = pd.DataFrame({
+    'from': ['A', 'B', 'C', 'A'],
+    'to': ['B', 'C', 'A', 'A']
+})
+
+# Create the visualization
+dv.visualize_duplet_link(
+    df,
+    edge_color="purple",
+    node_text_color="black",
+    background_color="white",
+    curvature=0.2
+)
+```
+
+### Doublet Link Visualization
+
+Doublet links are useful for showing complex relationships:
+
+```python
+import deepvisual as dv
+import pandas as pd
+
+# Create a sample dataframe with doublet relationships
+df = pd.DataFrame({
+    'from': ['A', 'B', 'C', 'A'],
+    'to': ['B', 'C', 'A', 'A']
+})
+
+# Create the visualization
+dv.link_doublet(
+    df,
+    loop_color='red',
+    edge_color='black',
+    inter_edge_color='blue',
+    title='My Doublet Graph'
+)
+```
+
+## Customization
+
+All visualization functions support extensive customization:
+
+- Colors for nodes, edges, text, and background
+- Figure size and layout
+- Edge styles and curvatures
+- Node labels and text visibility
+- Arrow styles and sizes
+
+See the [API Reference](/api-reference) for complete details on all customization options.
+
+## Best Practices
+
+1. **Data Preparation**:
+   - Ensure your data is in the correct format (DataFrame)
+   - Clean and preprocess your data before visualization
+   - Use meaningful labels for nodes and edges
+
+2. **Visualization**:
+   - Choose appropriate colors for good contrast
+   - Use consistent styling across related visualizations
+   - Consider the size and complexity of your graph
+
+3. **Performance**:
+   - For large graphs, consider simplifying the visualization
+   - Use appropriate figure sizes for your data
+   - Test different layouts for optimal readability 

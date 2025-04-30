@@ -1,0 +1,149 @@
+# Examples
+
+## Social Network Analysis
+
+Visualize relationships in a social network:
+
+```python
+import deepvisual as dv
+import pandas as pd
+
+# Sample social network data
+df = pd.DataFrame({
+    'from': ['Alice', 'Bob', 'Charlie', 'Alice', 'Bob'],
+    'to': ['Bob', 'Charlie', 'Alice', 'Charlie', 'Alice'],
+    'relation': ['friends', 'colleagues', 'family', 'colleagues', 'friends']
+})
+
+# Create a triplet graph visualization
+dv.visualize_triplet_graph(
+    df,
+    edge_color="blue",
+    node_color="lightblue",
+    node_text_color="black",
+    background_color="white"
+)
+```
+
+## Project Dependencies
+
+Show dependencies between different components of a project:
+
+```python
+import deepvisual as dv
+import pandas as pd
+
+# Sample project dependencies
+df = pd.DataFrame({
+    'from': ['Frontend', 'Backend', 'Database', 'API'],
+    'to': ['Backend', 'Database', 'API', 'Frontend']
+})
+
+# Create a duplet link visualization
+dv.visualize_duplet_link(
+    df,
+    edge_color="green",
+    node_text_color="black",
+    background_color="white",
+    curvature=0.2
+)
+```
+
+## Workflow Visualization
+
+Visualize a complex workflow with self-referential steps:
+
+```python
+import deepvisual as dv
+import pandas as pd
+
+# Sample workflow data
+df = pd.DataFrame({
+    'from': ['Start', 'Process', 'Review', 'Process', 'End'],
+    'to': ['Process', 'Review', 'Process', 'End', 'Start']
+})
+
+# Create a doublet link visualization
+dv.link_doublet(
+    df,
+    loop_color='red',
+    edge_color='black',
+    inter_edge_color='blue',
+    title='Workflow Process'
+)
+```
+
+## Custom Styling Example
+
+Create a highly customized visualization:
+
+```python
+import deepvisual as dv
+import pandas as pd
+
+# Sample data
+df = pd.DataFrame({
+    'from': ['A', 'B', 'C', 'D'],
+    'to': ['B', 'C', 'D', 'A']
+})
+
+# Create a customized visualization
+dv.visualize_duplet_link(
+    df,
+    edge_color="purple",
+    node_text_color="white",
+    background_color="darkgray",
+    figsize=(12, 10),
+    curvature=0.3,
+    arrow_style="->,head_length=0.8,head_width=0.6",
+    connection_style="arc3,rad=0.2"
+)
+```
+
+## Interactive Visualization
+
+Create an interactive visualization with Jupyter:
+
+```python
+import deepvisual as dv
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Sample data
+df = pd.DataFrame({
+    'from': ['Input', 'Process', 'Output'],
+    'to': ['Process', 'Output', 'Input']
+})
+
+# Create the visualization
+fig = dv.link_doublet(
+    df,
+    loop_color='orange',
+    edge_color='blue',
+    inter_edge_color='green',
+    title='Interactive Process'
+)
+
+# Add interactivity
+plt.ion()  # Turn on interactive mode
+plt.show()
+
+# The plot will remain interactive in Jupyter
+```
+
+## Best Practices for Examples
+
+1. **Data Preparation**:
+   - Use meaningful labels
+   - Structure data appropriately
+   - Clean and validate data
+
+2. **Visualization**:
+   - Choose appropriate colors
+   - Use consistent styling
+   - Consider the audience
+
+3. **Documentation**:
+   - Add clear comments
+   - Explain the context
+   - Show expected output 

@@ -2,8 +2,8 @@
 deepvisual
 classes:
 - visualize_triplet_graph:
-- visualize_duplet_link:
-- link_doublet: draws doublet links (the table format is from:to)
+- visualize_doblet_graph:
+- visualize_link_doublet: draws doublet links (the table format is from:to)
 """
 
 import pandas as pd
@@ -16,7 +16,7 @@ from matplotlib.patches import Circle, FancyArrowPatch, Line2D
 import networkx as nx
 
 __version__ = "0.1.0"
-__all__ = ['visualize_triplet_graph', 'visualize_duplet_link', 'link_doublet']  # Exported classes
+__all__ = ['visualize_triplet_graph', 'visualize_doblet_graph', 'visualize_link_doublet']  # Exported classes
 
 def visualize_triplet_graph(
     df,
@@ -95,7 +95,7 @@ def visualize_triplet_graph(
 
 #---------------------------------------------------------------------------------------------------
 
-def visualize_duplet_link(
+def visualize_doblet_graph(
     df,
     edge_color="gray",
     node_text_color="black", 
@@ -209,7 +209,7 @@ def visualize_duplet_link(
 
 #---------------------------------------------------------------------------------------------------
 
-def link_doublet(df: pd.DataFrame, loop_color='red', edge_color='black', inter_edge_color='blue', background_color='white', title='', color_title='black'):
+def visualize_link_doublet(df: pd.DataFrame, loop_color='red', edge_color='black', inter_edge_color='blue', background_color='white', title='', color_title='black'):
     # creating a graph
     G = nx.DiGraph()
     G.add_nodes_from(pd.concat([df['from'], df['to']]).unique())
