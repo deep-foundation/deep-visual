@@ -1,7 +1,18 @@
 export default {
   logo: (
     <span style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <img src="/img/link_dark.png" alt="DeepVisual Logo" style={{ height: '24px', width: '24px' }} />
+      <img 
+        src="/img/link_not_black.png" 
+        alt="DeepVisual Logo" 
+        style={{ height: '90px', width: '90px' }}
+        className="dark:hidden"
+      />
+      <img 
+        src="/img/link_not_white.png" 
+        alt="DeepVisual Logo" 
+        style={{ height: '90px', width: '90px' }}
+        className="hidden dark:block"
+      />
       DeepVisual
     </span>
   ),
@@ -22,12 +33,12 @@ export default {
       <link rel="icon" href="/img/link_dark.png" />
       <link
         rel="icon"
-        href="/img/link_not_white.png"
+        href="/img/link_not_black.png"
         media="(prefers-color-scheme: dark)"
       />
       <link
         rel="icon"
-        href="/img/link_not_black.png"
+        href="/img/link_not_white.png"
         media="(prefers-color-scheme: light)"
       />
     </>
