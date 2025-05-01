@@ -13,4 +13,14 @@ const withNextra = nextra({
 module.exports = withNextra({
   reactStrictMode: true,
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+  images: {
+    unoptimized: true
+  },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.(png|jpg|jpeg|gif|svg)$/i,
+      type: 'asset/resource'
+    })
+    return config
+  }
 }) 
