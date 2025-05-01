@@ -12,7 +12,8 @@ import math
 import random
 from matplotlib.patches import ArrowStyle
 import numpy as np
-from matplotlib.patches import Circle, FancyArrowPatch, Line2D
+from matplotlib.patches import Circle, FancyArrowPatch
+from matplotlib.lines import Line2D
 import networkx as nx
 
 __version__ = "0.1.0"
@@ -25,6 +26,8 @@ def visualize_triplet_graph(
     node_text_color="black", 
     background_color="white", 
     figsize=(10, 8),
+    title='',
+    color_title='black'
 ):
     # color validation
     valid_colors = {"black", "red", "green", "yellow", "orange", 
@@ -90,6 +93,7 @@ def visualize_triplet_graph(
                bbox=dict(facecolor="white", alpha=0.8, edgecolor="none"))
 
     plt.axis("off")
+    plt.title(title, color=color_title)
     plt.tight_layout()
     plt.show()
 
