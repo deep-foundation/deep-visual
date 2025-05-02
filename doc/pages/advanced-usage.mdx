@@ -25,7 +25,7 @@ custom_positions = {
 
 # Create visualization with custom layout
 fig, ax = plt.subplots(figsize=(10, 8))
-dv.visualize_duplet_link(
+dv.visualize_doblet_graph(
     df,
     node_positions=custom_positions,
     edge_color="blue",
@@ -50,14 +50,14 @@ df1 = pd.DataFrame({
     'from': ['A', 'B', 'C'],
     'to': ['B', 'C', 'A']
 })
-dv.link_doublet(df1, ax=ax1, title='First Graph')
+dv.visualize_link_doublet(df1, ax=ax1, title='First Graph')
 
 # Second visualization
 df2 = pd.DataFrame({
     'from': ['X', 'Y', 'Z'],
     'to': ['Y', 'Z', 'X']
 })
-dv.link_doublet(df2, ax=ax2, title='Second Graph')
+dv.visualize_link_doublet(df2, ax=ax2, title='Second Graph')
 
 plt.tight_layout()
 plt.show()
@@ -82,7 +82,7 @@ df = pd.DataFrame({
 custom_style = ArrowStyle.CurveFilledB(head_length=0.8, head_width=0.6)
 
 # Create visualization with custom arrow style
-dv.visualize_duplet_link(
+dv.visualize_doblet_graph(
     df,
     arrow_style=custom_style,
     edge_color="red",
@@ -113,7 +113,7 @@ button_ax = fig.add_axes([0.7, 0.05, 0.2, 0.075])
 button = Button(button_ax, 'Change Colors')
 
 # Initial visualization
-viz = dv.link_doublet(df, ax=ax)
+viz = dv.visualize_link_doublet(df, ax=ax)
 
 # Button click handler
 def change_colors(event):
@@ -143,7 +143,7 @@ df = pd.DataFrame({
 })
 
 # Optimize visualization
-dv.visualize_duplet_link(
+dv.visualize_doblet_graph(
     df,
     node_text_visible=False,  # Hide node labels for better performance
     edge_color="gray",
@@ -174,7 +174,7 @@ df = pd.DataFrame({
 })
 
 # Create visualization with custom colormap
-dv.visualize_duplet_link(
+dv.visualize_doblet_graph(
     df,
     edge_color=cmap(df['weight']),
     node_text_color="black",
