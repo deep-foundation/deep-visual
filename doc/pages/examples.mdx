@@ -39,13 +39,12 @@ df = pd.DataFrame({
     'to': ['Backend', 'Database', 'API', 'Frontend']
 })
 
-# Create a duplet link visualization
-dv.visualize_duplet_link(
+# Create a doublet link visualization
+dv.visualize_link_doublet(
     df,
     edge_color="green",
     node_text_color="black",
-    background_color="white",
-    curvature=0.2
+    background_color="white"
 )
 ```
 
@@ -56,6 +55,7 @@ Visualize a complex workflow with self-referential steps:
 ```python
 import deepvisual as dv
 import pandas as pd
+import deeplinks as dl
 
 # Sample workflow data
 df = pd.DataFrame({
@@ -63,8 +63,11 @@ df = pd.DataFrame({
     'to': ['Process', 'Review', 'Process', 'End', 'Start']
 })
 
+# Let's sort using the deeplinks library
+dl.sort_duoblet(df)
+
 # Create a doublet link visualization
-dv.link_doublet(
+dv.visualize_link_doublet(
     df,
     loop_color='red',
     edge_color='black',
@@ -88,7 +91,7 @@ df = pd.DataFrame({
 })
 
 # Create a customized visualization
-dv.visualize_duplet_link(
+dv.visualize_doblet_graph(
     df,
     edge_color="purple",
     node_text_color="white",
@@ -116,7 +119,7 @@ df = pd.DataFrame({
 })
 
 # Create the visualization
-fig = dv.link_doublet(
+fig = dv.visualize_link_doublet(
     df,
     loop_color='orange',
     edge_color='blue',
