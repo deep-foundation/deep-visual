@@ -213,7 +213,7 @@ def visualize_doblet_graph(
 
 #---------------------------------------------------------------------------------------------------
 
-def visualize_link_doublet(df: pd.DataFrame, loop_color='red', edge_color='black', inter_edge_color='blue', background_color='white', title='', color_title='black'):
+def visualize_link_doublet(df, loop_color='red', edge_color='black', inter_edge_color='blue', background_color='white', title='', color_title='black'):
     # creating a graph
     G = nx.DiGraph()
     G.add_nodes_from(pd.concat([df['from'], df['to']]).unique())
