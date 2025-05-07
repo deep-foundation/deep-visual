@@ -55,7 +55,7 @@ Visualize a complex workflow with self-referential steps:
 ```python
 import deepvisual as dv
 import pandas as pd
-import deeplinks as dl
+import deepcore as dc
 
 # Sample workflow data
 df = pd.DataFrame({
@@ -63,8 +63,8 @@ df = pd.DataFrame({
     'to': ['Process', 'Review', 'Process', 'End', 'Start']
 })
 
-# Let's sort using the deeplinks library
-dl.sort_duoblet(df)
+# Let's sort using the deepcore library
+dc.sort_duoblet(df)
 
 # Create a doublet link visualization
 dv.visualize_link_doublet(

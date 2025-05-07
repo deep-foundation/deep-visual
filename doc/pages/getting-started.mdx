@@ -24,7 +24,7 @@ Doublet links show connections between pairs of nodes:
 ```python
 import deepvisual as dv
 import pandas as pd
-import deeplinks as dl
+import deepcore as dc
 
 # Create a sample dataframe with doublet relationships
 data = {
@@ -33,8 +33,8 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# Let's sort using the deeplinks library
-dl.sort_duoblet(df)
+# Let's sort using the deepcore library
+dc.sort_duoblet(df)
 
 # The result is a sorted table:
 # 'from': [1, 2, 3, 4, 2, 2, 4, 6]
