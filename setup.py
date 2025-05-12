@@ -8,6 +8,7 @@ setup(
         'pandas>=1.0',
         'matplotlib>=1.0',
         'networkx>=1.0',
+        'community>=1.0',
     ],
     author="Deep Found",
     description="Library for datascience and for data visualisation",
