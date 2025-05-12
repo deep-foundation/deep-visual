@@ -4,6 +4,7 @@ classes:
 - visualize_triplet_graph:
 - visualize_doblet_graph:
 - visualize_link_doublet: draws doublet links (the table format is from:to)
+- cluster_links: clusters links using the Louvain method
 """
 
 import pandas as pd
@@ -15,9 +16,10 @@ import numpy as np
 from matplotlib.patches import Circle, FancyArrowPatch
 from matplotlib.lines import Line2D
 import networkx as nx
+from community import community_louvain
 
 __version__ = "0.1.0"
-__all__ = ['visualize_triplet_graph', 'visualize_doblet_graph', 'visualize_link_doublet']  # Exported classes
+__all__ = ['visualize_triplet_graph', 'visualize_doblet_graph', 'visualize_link_doublet', 'cluster_links']  # Exported classes
 
 def visualize_triplet_graph(
     df,
@@ -361,5 +363,138 @@ def visualize_link_doublet(df, loop_color='red', edge_color='black', inter_edge_
     ax.set_aspect('equal')
     ax.axis('off')
     plt.title(title, color=color_title)
+    plt.tight_layout()
+    plt.show()
+
+#---------------------------------------------------------------------------------------------------
+
+def cluster_links(df):
+    """Link clustering function"""
+    df['link'] = df['from'].astype(str) + '→' + df['to'].astype(str)
+    G = nx.Graph()
+    G.add_nodes_from(df['link'])
+    
+    for i in range(len(df)):
+        for j in range(i + 1, len(df)):
+            a_from, a_to = df.iloc[i]['from'], df.iloc[i]['to']
+            b_from, b_to = df.iloc[j]['from'], df.iloc[j]['to']
+            if {a_from, a_to} & {b_from, b_to}:
+                G.add_edge(df.iloc[i]['link'], df.iloc[j]['link'])
+    
+    partition = community_louvain.best_partition(G)
+    return partition
+
+def visualize_link_doublet_with_clusters(df, background_color='white', title=''):
+    # сlustering of links
+    clusters = cluster_links(df)
+    
+    # create a graph and node positions
+    G = nx.DiGraph()
+    G.add_nodes_from(pd.concat([df['from'], df['to']]).unique())
+    G.add_edges_from(zip(df['from'], df['to']))
+    pos = nx.circular_layout(G)
+    
+    # color palette for clusters
+    unique_clusters = set(clusters.values())
+    palette = plt.cm.tab10.colors
+    cluster_colors = {c: palette[i % len(palette)] for i, c in enumerate(unique_clusters)}
+    
+    fig, ax = plt.subplots(figsize=(12, 8))
+    fig.patch.set_facecolor(background_color)
+    ax.set_facecolor(background_color)
+    
+    operation_positions = {}
+    loops = df[df['from'] == df['to']]
+    loop_nodes = set(loops['from'])
+    
+    for i, row in df.iterrows():
+        src, dst = row['from'], row['to']
+        link = f"{src}→{dst}"
+        op_id = i + 1
+        cluster = clusters.get(link, -1)
+        color = cluster_colors.get(cluster, 'gray')
+        
+        # loops
+        if src == dst:
+            t = np.linspace(0, 2*np.pi, 500)
+            a = 0.12
+            x_loop = a*np.sin(t)/(1+np.cos(t)**2) + pos[src][0]
+            y_loop = a*np.sin(t)*np.cos(t)/(1+np.cos(t)**2) + pos[src][1]
+            ax.plot(x_loop, y_loop, color=color, lw=2)
+            
+            arrow_idx = -20
+            ax.add_patch(FancyArrowPatch(
+                (x_loop[arrow_idx], y_loop[arrow_idx]),
+                (x_loop[arrow_idx+1], y_loop[arrow_idx+1]),
+                arrowstyle='->', color=color, mutation_scale=15, lw=2
+            ))
+            ax.text(pos[src][0], pos[src][1]-0.10, str(op_id),
+                   fontsize=10, color=color, ha='center', va='center')
+        
+        # node links
+        elif src in loop_nodes and dst in loop_nodes:
+            x1, y1 = pos[src]
+            x2, y2 = pos[dst]
+            
+            ax.add_patch(FancyArrowPatch(
+                (x1, y1), (x2, y2),
+                arrowstyle='->', color=color,
+                mutation_scale=20, lw=2
+            ))
+            
+            # cross at the beginning of the arrow
+            dx, dy = x2-x1, y2-y1
+            length = np.hypot(dx, dy)
+            if length > 0:
+                ux, uy = dx/length, dy/length
+                perp_x, perp_y = -uy, ux
+                start_x = x1 + ux*0.07
+                start_y = y1 + uy*0.07
+                ax.add_line(Line2D(
+                    [start_x-perp_x*0.03, start_x+perp_x*0.03],
+                    [start_y-perp_y*0.03, start_y+perp_y*0.03],
+                    color=color, lw=2
+                ))
+            
+            # signature ID
+            ax.text((x1+x2)/2+0.03, (y1+y2)/2+0.03, str(op_id),
+                   fontsize=10, color=color, ha='left', va='bottom')
+            operation_positions[op_id] = ((x1, y1), (x2, y2))
+        
+        # linkages
+        else:
+            if src in operation_positions and dst in operation_positions:
+                (x1s, y1s), (x1e, y1e) = operation_positions[src]
+                (x2s, y2s), (x2e, y2e) = operation_positions[dst]
+                mid1 = ((x1s+x1e)/2, (y1s+y1e)/2)
+                mid2 = ((x2s+x2e)/2, (y2s+y2e)/2)
+                
+                rad = -0.9 if mid1[1] > mid2[1] else 0.9
+                ax.add_patch(FancyArrowPatch(
+                    mid1, mid2,
+                    connectionstyle=f"arc3,rad={rad}",
+                    arrowstyle='->', color=color,
+                    mutation_scale=20, lw=2
+                ))
+                
+                # signature ID
+                dx = mid2[0]-mid1[0]
+                dy = mid2[1]-mid1[1]
+                length = np.hypot(dx, dy)
+                perp_dx, perp_dy = -dy/length, dx/length
+                offset = 0.3*abs(rad)
+                text_x = (mid1[0]+mid2[0])/2 + perp_dx*offset
+                text_y = (mid1[1]+mid2[1])/2 + perp_dy*offset
+                ax.text(text_x, text_y, str(op_id),
+                       fontsize=10, color=color, ha='center', va='center')
+    
+    # clustered legend
+    legend_elements = [Line2D([0], [0], color=c, lw=2, label=f'Cluster {k}') 
+                      for k, c in cluster_colors.items()]
+    ax.legend(handles=legend_elements, loc='upper right')
+    
+    ax.set_aspect('equal')
+    ax.axis('off')
+    plt.title(title)
     plt.tight_layout()
     plt.show()
