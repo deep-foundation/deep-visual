@@ -4,7 +4,7 @@ classes:
 - visualize_triplet_graph:
 - visualize_doblet_graph:
 - visualize_link_doublet: draws doublet links (the table format is from:to)
-- cluster_links: clusters links using the Louvain method
+- visualize_link_doublet_cluster: clusters links using the Louvain method
 """
 
 import pandas as pd
@@ -19,7 +19,7 @@ import networkx as nx
 from community import community_louvain
 
 __version__ = "0.1.0"
-__all__ = ['visualize_triplet_graph', 'visualize_doblet_graph', 'visualize_link_doublet', 'cluster_links']  # Exported classes
+__all__ = ['visualize_triplet_graph', 'visualize_doblet_graph', 'visualize_link_doublet', 'visualize_link_doublet_cluster']  # Exported classes
 
 def visualize_triplet_graph(
     df,
@@ -368,37 +368,40 @@ def visualize_link_doublet(df, loop_color='red', edge_color='black', inter_edge_
 
 #---------------------------------------------------------------------------------------------------
 
-def cluster_links(df):
-    """Link clustering function"""
-    df['link'] = df['from'].astype(str) + '→' + df['to'].astype(str)
-    G = nx.Graph()
-    G.add_nodes_from(df['link'])
+def visualize_link_doublet_cluster(df, background_color='white', title=''):
+    """visualization of links with louvain clustering"""
     
-    for i in range(len(df)):
-        for j in range(i + 1, len(df)):
-            a_from, a_to = df.iloc[i]['from'], df.iloc[i]['to']
-            b_from, b_to = df.iloc[j]['from'], df.iloc[j]['to']
-            if {a_from, a_to} & {b_from, b_to}:
-                G.add_edge(df.iloc[i]['link'], df.iloc[j]['link'])
+    # 1. built-in clustering function
+    def cluster_links(df):
+        """internal function for clustering links"""
+        df['link'] = df['from'].astype(str) + '→' + df['to'].astype(str)
+        G = nx.Graph()
+        G.add_nodes_from(df['link'])
+        
+        for i in range(len(df)):
+            for j in range(i + 1, len(df)):
+                a_from, a_to = df.iloc[i]['from'], df.iloc[i]['to']
+                b_from, b_to = df.iloc[j]['from'], df.iloc[j]['to']
+                if {a_from, a_to} & {b_from, b_to}:
+                    G.add_edge(df.iloc[i]['link'], df.iloc[j]['link'])
+        
+        return community_louvain.best_partition(G)
     
-    partition = community_louvain.best_partition(G)
-    return partition
-
-def visualize_link_doublet_with_clusters(df, background_color='white', title=''):
-    # сlustering of links
+    # 2. perform clustering
     clusters = cluster_links(df)
     
-    # create a graph and node positions
+    # 3. create graph and node positions
     G = nx.DiGraph()
     G.add_nodes_from(pd.concat([df['from'], df['to']]).unique())
     G.add_edges_from(zip(df['from'], df['to']))
     pos = nx.circular_layout(G)
     
-    # color palette for clusters
+    # 4. color palette for clusters
     unique_clusters = set(clusters.values())
     palette = plt.cm.tab10.colors
     cluster_colors = {c: palette[i % len(palette)] for i, c in enumerate(unique_clusters)}
     
+    # 5. visualization setup
     fig, ax = plt.subplots(figsize=(12, 8))
     fig.patch.set_facecolor(background_color)
     ax.set_facecolor(background_color)
@@ -407,14 +410,14 @@ def visualize_link_doublet_with_clusters(df, background_color='white', title='')
     loops = df[df['from'] == df['to']]
     loop_nodes = set(loops['from'])
     
+    # 6. draw all elements
     for i, row in df.iterrows():
         src, dst = row['from'], row['to']
         link = f"{src}→{dst}"
         op_id = i + 1
-        cluster = clusters.get(link, -1)
-        color = cluster_colors.get(cluster, 'gray')
+        color = cluster_colors.get(clusters.get(link, -1), 'gray')
         
-        # loops
+        # closed loops
         if src == dst:
             t = np.linspace(0, 2*np.pi, 500)
             a = 0.12
@@ -431,7 +434,7 @@ def visualize_link_doublet_with_clusters(df, background_color='white', title='')
             ax.text(pos[src][0], pos[src][1]-0.10, str(op_id),
                    fontsize=10, color=color, ha='center', va='center')
         
-        # node links
+        # links between nodes
         elif src in loop_nodes and dst in loop_nodes:
             x1, y1 = pos[src]
             x2, y2 = pos[dst]
@@ -442,7 +445,7 @@ def visualize_link_doublet_with_clusters(df, background_color='white', title='')
                 mutation_scale=20, lw=2
             ))
             
-            # cross at the beginning of the arrow
+            # cross at arrow start
             dx, dy = x2-x1, y2-y1
             length = np.hypot(dx, dy)
             if length > 0:
@@ -456,12 +459,12 @@ def visualize_link_doublet_with_clusters(df, background_color='white', title='')
                     color=color, lw=2
                 ))
             
-            # signature ID
+            # id label
             ax.text((x1+x2)/2+0.03, (y1+y2)/2+0.03, str(op_id),
                    fontsize=10, color=color, ha='left', va='bottom')
             operation_positions[op_id] = ((x1, y1), (x2, y2))
         
-        # linkages
+        # links between links
         else:
             if src in operation_positions and dst in operation_positions:
                 (x1s, y1s), (x1e, y1e) = operation_positions[src]
@@ -477,7 +480,7 @@ def visualize_link_doublet_with_clusters(df, background_color='white', title='')
                     mutation_scale=20, lw=2
                 ))
                 
-                # signature ID
+                # id label
                 dx = mid2[0]-mid1[0]
                 dy = mid2[1]-mid1[1]
                 length = np.hypot(dx, dy)
@@ -488,7 +491,7 @@ def visualize_link_doublet_with_clusters(df, background_color='white', title='')
                 ax.text(text_x, text_y, str(op_id),
                        fontsize=10, color=color, ha='center', va='center')
     
-    # clustered legend
+    # 7. add legend
     legend_elements = [Line2D([0], [0], color=c, lw=2, label=f'Cluster {k}') 
                       for k, c in cluster_colors.items()]
     ax.legend(handles=legend_elements, loc='upper right')
