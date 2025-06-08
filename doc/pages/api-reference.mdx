@@ -47,13 +47,16 @@ Visualization of linkage clustering by adapted Louvain's method.
 ## visualize_link_doublet
 background_color='white', title='', color_title='black'
 ```python
-def visualize_link_doublet(df, 
-    loop_color='red', 
-    edge_color='black', 
-    inter_edge_color='blue', 
-    background_color='white', 
-    title='', 
-    color_title='black'
+def visualize_link_doublet(
+    df,
+    loop_color='red',
+    edge_color='black',
+    inter_edge_color='blue',
+    background_color='white',
+    title='',
+    color_title='black',
+    figsize=(12, 8),
+    show_labels=True
 )
 ```
 
@@ -68,6 +71,8 @@ Creates a doublet link visualization.
 - `background_color`: Background color (default: "white")
 - `title`: Name of the chart (default: "")
 - `color_title`: Color of the chart name (default: "black")
+- `figsize`: Fixed size of the plot (default: "(12, 8)")
+- `show_labels`: Should I represent the operation id? (default: "True")
 
 ## visualize_doblet_graph
 
